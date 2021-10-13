@@ -45,67 +45,80 @@ public class Holonomic_Oct extends OpMode
             powerRY = gamepad1.right_stick_y/2;
         }
 
-        robotAngle = Math.atan2(powerRX, powerRY);
-        telemetry.addData("Robot angle:", robotAngle);
-        telemetry.update();
-
-        PowerMultiplier = Math.sqrt((Math.pow(powerRX, 2) + Math.pow(powerRY, 2)));
-
-        if(powerRX == 0 || powerRY == 0)
+        if (gamepad1.left_stick_x != 0)
         {
-            if (powerRY <= 1 && powerRX == 0)
+            lf = powerRY;
+            rb = -powerRY;
+            lb = powerRY;
+            rf = -powerRY;
+
+            FR.setPower(rf);
+            FL.setPower(lf);
+            BR.setPower(rb);
+            BL.setPower(lb);
+        }
+        else
+        {
+            robotAngle = Math.atan2(powerRX, powerRY);
+            telemetry.addData("Robot angle:", robotAngle);
+            telemetry.update();
+
+            PowerMultiplier = Math.sqrt((Math.pow(powerRX, 2) + Math.pow(powerRY, 2)));
+
+            if(powerRX == 0 || powerRY == 0)
             {
-                lf = powerRY;
-                rb = powerRY;
-                lb = powerRY;
-                rf = powerRY;
+                if (powerRY <= 1 && powerRX == 0)
+                {
+                    lf = powerRY;
+                    rb = powerRY;
+                    lb = powerRY;
+                    rf = powerRY;
 
-                FR.setPower(rf);
-                FL.setPower(lf);
-                BR.setPower(rb);
-                BL.setPower(lb);
+                    FR.setPower(rf);
+                    FL.setPower(lf);
+                    BR.setPower(rb);
+                    BL.setPower(lb);
+                }
+                else if (powerRX <= 1 && powerRY == 0)
+                {
+                    lf = powerRX;
+                    rb = powerRX;
+                    lb = -powerRX;
+                    rf = -powerRX;
+
+                    FR.setPower(rf);
+                    FL.setPower(lf);
+                    BR.setPower(rb);
+                    BL.setPower(lb);
+                }
             }
-            else if (powerRX <= 1 && powerRY == 0)
+            lf = (PowerMultiplier*(Math.sin(robotAngle+(Math.PI/4))));
+            rb = (PowerMultiplier*(Math.sin(robotAngle+(Math.PI/4))));
+            lb = (PowerMultiplier*-1*Math.sin(robotAngle-(Math.PI/4)));
+            rf = (PowerMultiplier*-1*Math.sin(robotAngle-(Math.PI/4)));
+
+            if (lf > 1)
             {
-                lf = powerRX;
-                rb = powerRX;
-                lb = -powerRX;
-                rf = -powerRX;
-
-                FR.setPower(rf);
-                FL.setPower(lf);
-                BR.setPower(rb);
-                BL.setPower(lb);
+                lf = 0;
             }
-        }
-        lf = (PowerMultiplier*(Math.sin(robotAngle+(Math.PI/4))));
-        rb = (PowerMultiplier*(Math.sin(robotAngle+(Math.PI/4))));
-        lb = (PowerMultiplier*-1*Math.sin(robotAngle-(Math.PI/4)));
-        rf = (PowerMultiplier*-1*Math.sin(robotAngle-(Math.PI/4)));
+            if(rb > 1)
+            {
+                rb = 0;
+            }
+            if (lb > 1)
+            {
+                lb = 0;
+            }
+            if (rf > 1)
+            {
+                rf = 0;
+            }
 
-        if (lf > 1)
-        {
-            lf = 0;
+            FR.setPower(rf);
+            FL.setPower(lf);
+            BR.setPower(rb);
+            BL.setPower(lb);
         }
-        if(rb > 1)
-        {
-            rb = 0;
-        }
-        if (lb > 1)
-        {
-            lb = 0;
-        }
-        if (rf > 1)
-        {
-            rf = 0;
-        }
-
-        FR.setPower(rf);
-        FL.setPower(lf);
-        BR.setPower(rb);
-        BL.setPower(lb);
-        
     }
-
 }
 
